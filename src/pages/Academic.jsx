@@ -1,10 +1,10 @@
 // src/pages/Academic.jsx
-import React from 'react';
 import { Header, Footer } from '../components/Layout';
-import { BookOpen, GraduationCap, Calendar, FileText, CheckCircle } from 'lucide-react';
+import { GraduationCap, Calendar, CheckCircle } from 'lucide-react';
+import { useData } from '../context/DataContext';
 
 const AcademicHero = () => (
-    <section className="relative h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
+    <section className="relative h-[300px] md:h-[400px] flex items-center mt-[105px] bg-blue-900 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-950/90 to-blue-900/70 z-10"></div>
         <img
             src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
@@ -12,7 +12,7 @@ const AcademicHero = () => (
             alt="Academic Atmosphere"
         />
         <div className="relative z-20 container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Akademik</h1>
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">Akademik</h1>
             <div className="w-24 h-1 bg-yellow-500 mx-auto"></div>
             <p className="text-blue-100 mt-6 max-w-2xl mx-auto text-lg">
                 Menjelajahi program studi, kurikulum, dan kegiatan akademik yang dirancang untuk memperlengkapi pemimpin masa depan.
@@ -22,32 +22,8 @@ const AcademicHero = () => (
 );
 
 const ProgramsDetail = () => {
-    const programs = [
-        {
-            id: 1,
-            level: "Sarjana (S1)",
-            title: "Sarjana Teologi (S.Th)",
-            desc: "Program empat tahun yang memberikan dasar teologi biblika yang kuat, pembentukan karakter rohani, dan keterampilan pelayanan praktis.",
-            features: ["144 SKS", "Praktek Pelayanan 1 Tahun", "Konsentrasi: Pastoral & Misi"],
-            color: "border-blue-900 bg-blue-50"
-        },
-        {
-            id: 2,
-            level: "Magister (S2)",
-            title: "Magister Missiologi (M.Miss)",
-            desc: "Program pascasarjana yang dirancang untuk pendeta dan pemimpin pelayanan yang ingin mendalami strategi misi urban dan lintas budaya.",
-            features: ["42 SKS", "Tesis Riset Lapangan", "Kuliah Modular/Hybrid"],
-            color: "border-red-800 bg-red-50"
-        },
-        {
-            id: 3,
-            level: "Doktoral (S3)",
-            title: "Doktor Teologi (D.Th)",
-            desc: "Program riset tingkat lanjut untuk menghasilkan cendekiawan teologi yang mampu berkontribusi pada pemikiran teologis di konteks Asia.",
-            features: ["Disertasi", "Seminar Internasional", "Publikasi Jurnal Terakreditasi"],
-            color: "border-yellow-600 bg-yellow-50"
-        }
-    ];
+    const { siteData } = useData();
+    const programs = siteData?.programs || [];
 
     return (
         <section className="py-20 bg-white">
@@ -77,9 +53,7 @@ const ProgramsDetail = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <button className="w-full mt-4 border border-gray-300 text-gray-700 font-bold py-2.5 rounded-lg hover:bg-gray-50 transition">
-                                Unduh Kurikulum
-                            </button>
+
                         </div>
                     ))}
                 </div>
@@ -89,14 +63,9 @@ const ProgramsDetail = () => {
 };
 
 const AcademicCalendar = () => {
-    const events = [
-        { date: "1-15 Agustus 2026", event: "Registrasi Ulang Mahasiswa Lama", type: "Administrasi" },
-        { date: "17 Agustus 2026", event: "Upacara Kemerdekaan RI", type: "Nasional" },
-        { date: "20-22 Agustus 2026", event: "Orientasi Mahasiswa Baru (OSPEK)", type: "Kemahasiswaan" },
-        { date: "25 Agustus 2026", event: "Kuliah Perdana Semester Ganjil 2026/2027", type: "Akademik" },
-        { date: "10-14 Oktober 2026", event: "Ujian Tengah Semester (UTS)", type: "Ujian" },
-        { date: "15 Desember 2026", event: "Natal Kampus & Libur Akhir Tahun", type: "Perayaan" },
-    ];
+    const { siteData } = useData();
+    const calendarData = siteData?.academicCalendar || { yearLabel: "Semester Ganjil 2026/2027", events: [] };
+    const events = calendarData.events || [];
 
     return (
         <section className="py-20 bg-gray-50">
@@ -104,8 +73,9 @@ const AcademicCalendar = () => {
                 <div className="flex flex-col md:flex-row gap-12">
                     <div className="md:w-1/3">
                         <h2 className="text-3xl font-bold text-blue-900 mb-6">Kalender Akademik</h2>
+                        <h3 className="text-xl font-bold text-gray-700 mb-4">{calendarData.yearLabel}</h3>
                         <p className="text-gray-600 mb-6">
-                            Jadwal penting kegiatan akademik semester Ganjil T.A. 2026/2027. Pastikan Anda mencatat tanggal-tanggal penting ini.
+                            Jadwal penting kegiatan akademik. Pastikan Anda mencatat tanggal-tanggal penting ini.
                         </p>
                         <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-lg">
                             <h4 className="font-bold text-yellow-800 mb-2">Catatan Penting:</h4>
@@ -115,7 +85,7 @@ const AcademicCalendar = () => {
                         </div>
                     </div>
                     <div className="md:w-2/3">
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div id="calendar-table" className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
@@ -145,11 +115,6 @@ const AcademicCalendar = () => {
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div className="mt-6 text-right">
-                            <button className="text-blue-900 font-bold hover:text-yellow-600 flex items-center gap-2 ml-auto">
-                                <FileText size={18} /> Download Kalender Lengkap (PDF)
-                            </button>
                         </div>
                     </div>
                 </div>
